@@ -122,3 +122,24 @@ void mat_map(mat_t* dst, mat_t* src, float128_t (*func)(float128_t)) {
     for (uint64_t j = 0; j < src->column; j++)
       mat_set(dst, i, j, func(mat_get(src, i, j)));
 }
+
+float128_t mat_max(mat_t* a) {
+  float128_t v = mat_get(a, 0, 0);
+  for (uint64_t i = 0; i < a->row; i++)
+    for (uint64_t j = 0; j < a->column; j++)
+      v = MAT_CMP_MAX(v, mat_get(a, i, j));
+  return v;
+}
+
+void mat_index(index_t* index, mat_t* a, float128_t v) {
+  index->i = index->j = INDEX_ERR;
+  for (uint64_t i = 0; i < a->row; i++) {
+    for (uint64_t j = 0; j < a->column; j++) {
+      if (mat_get(a, i, j) == v) {
+        index->i = i;
+        index->j = j;
+        return;
+      }
+    }
+  }
+}
